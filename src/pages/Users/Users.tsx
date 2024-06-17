@@ -10,7 +10,7 @@ import { useUsers } from "@/stores/users.store";
 import { useTitle } from "@/hooks/useTitle";
 
 function Users() {
-  useTitle("Administrar usuarios");
+  useTitle("Administrar roles usuarios");
 
   const user = useAuth((state) => state.user);
   const token = useAuth((state) => state.token);
@@ -47,7 +47,7 @@ function Users() {
   return (
     <PageContainer>
       <div className="flex flex-col sm:flex-row justify-between items-start w-full gap-3 mb-4">
-        <h2 className="text-xl font-bold">Administración de usuarios</h2>
+        <h2 className="text-xl font-bold">Administración de roles usuarios</h2>
       </div>
 
       <UsersTable

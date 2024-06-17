@@ -33,7 +33,7 @@ export const SidebarContent = ({ isMobile }: SidebarContentProps) => {
       </SidebarItem>
 
       <SidebarItem
-        label="Administrar Usuarios"
+        label="Administrar roles"
         to={PRIVATE_ROUTES.USERS_MANAGEMENT}
         isSidebarOpen={isSidebarOpen}
         allowedRoles={[RoleEnum.ADMIN]}

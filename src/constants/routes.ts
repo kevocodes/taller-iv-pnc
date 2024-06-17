@@ -4,8 +4,8 @@ export enum PUBLIC_ROUTES {
 }
 
 export enum PRIVATE_ROUTES {
-  USERS_MANAGEMENT = "/administrar-usuarios",
-  USERS_CHANGE_ROLE = `${USERS_MANAGEMENT}/cambiar-rol`,
+  USERS_MANAGEMENT = "/administrar-roles",
+  USERS_CHANGE_ROLE = `${USERS_MANAGEMENT}/modificar`,
   ADD_RECORD = "/agregar-historial",
   RECORDS = "/historial-medico",
   REQUEST_APPOINTMENT = "/solicitar-cita",

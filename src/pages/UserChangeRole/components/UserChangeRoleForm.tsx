@@ -89,7 +89,14 @@ function UserChangeRoleForm() {
 
         <div className="flex flex-wrap gap-2">
           {newRoles.map((role) => (
-            <Badge key={crypto.randomUUID()} variant={"outline"}>
+            <Badge
+              key={crypto.randomUUID()}
+              variant={
+                user!.roles.findIndex((r) => r.name === role) > -1
+                  ? "destructive"
+                  : "sucess"
+              }
+            >
               {translateUserRole(role)}
             </Badge>
           ))}
