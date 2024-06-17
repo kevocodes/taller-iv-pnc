@@ -9,25 +9,20 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { ResponseError } from "@/models/ResponseError.model";
-import { UserFromAPI } from "@/models/user.model";
-import { useAppointment } from "@/stores/appointment.store";
-import { useAuth } from "@/stores/auth.store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 import PrescriptionEndDate from "./components/PrescriptionEndDate/PrescriptionEndDate";
 import { createPrescription } from "@/schemas/prescription.schema";
+import { usePrescriptions } from "@/stores/prescriptions.store";
 
 interface CreatePrescriptionFormProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function CreatePrescriptionForm({ user }: CreatePrescriptionFormProps) {
-  const token = useAuth((state) => state.token);
-  const appointment = useAppointment((state) => state.appointment);
+function CreatePrescriptionForm({ setOpen }: CreatePrescriptionFormProps) {
+  const addPrescriptions = usePrescriptions((state) => state.addPrescription);
 
   const form = useForm<z.infer<typeof createPrescription>>({
     resolver: zodResolver(createPrescription),
@@ -38,18 +33,14 @@ function CreatePrescriptionForm({ user }: CreatePrescriptionFormProps) {
   });
 
   async function onSubmit(data: z.infer<typeof createPrescription>) {
-    try {
-      // const message = await createRecord(token!, user.username, data.reason);
-      // toast.success(message);
-    } catch (error) {
-      if (error instanceof ResponseError) {
-        return toast.error(error.message);
-      }
-
-      if (error instanceof Error) {
-        return toast.error(error.message);
-      }
-    }
+    addPrescriptions({
+      dose: data.dose,
+      medicine: data.medicine,
+      prescriptionEndLocalDateTime: data.prescriptionEndLocalDateTime.toISOString(),
+      idPrescription: crypto.randomUUID(), 
+    });
+    form.reset();
+    setOpen(false);
   }
 
   return (

@@ -1,6 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { AppointmentOwn } from "@/models/appointment.model";
+import OwnAppointmentsActions from "../components/OwnAppointmentsActions/OwnAppointmentsActions";
 
 export const ownAppointmentsColumns: Array<ColumnDef<AppointmentOwn>> = [
   {
@@ -19,9 +20,7 @@ export const ownAppointmentsColumns: Array<ColumnDef<AppointmentOwn>> = [
       const dateTime = appointment.appointmentRequestDateTime;
 
       return (
-        <p>
-          {dateTime ? dayjs(dateTime).format("DD/MM/YYYY HH:mm") : "-"}
-        </p>
+        <p>{dateTime ? dayjs(dateTime).format("DD/MM/YYYY HH:mm") : "-"}</p>
       );
     },
   },
@@ -33,9 +32,7 @@ export const ownAppointmentsColumns: Array<ColumnDef<AppointmentOwn>> = [
       const dateTime = appointment.appointmentRealizationDateTime;
 
       return (
-        <p>
-          {dateTime ? dayjs(dateTime).format("DD/MM/YYYY HH:mm") : "-"}
-        </p>
+        <p>{dateTime ? dayjs(dateTime).format("DD/MM/YYYY HH:mm") : "-"}</p>
       );
     },
   },
@@ -47,10 +44,16 @@ export const ownAppointmentsColumns: Array<ColumnDef<AppointmentOwn>> = [
       const dateTime = appointment.appointmentEndDateTime;
 
       return (
-        <p>
-          {dateTime ? dayjs(dateTime).format("DD/MM/YYYY HH:mm") : "-"}
-        </p>
+        <p>{dateTime ? dayjs(dateTime).format("DD/MM/YYYY HH:mm") : "-"}</p>
       );
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const appointment = row.original;
+
+      return <OwnAppointmentsActions appointment={appointment} />;
     },
   },
 ];

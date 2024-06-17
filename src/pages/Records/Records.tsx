@@ -17,7 +17,9 @@ function Records() {
   const records = useRecords((state) => state.records);
   const setRecords = useRecords((state) => state.setRecords);
   const startDate = useRecords((state) => state.startDate);
+  const setStartDate = useRecords((state) => state.setStartDate);
   const endDate = useRecords((state) => state.endDate);
+  const setEndDate = useRecords((state) => state.setEndDate);
 
   const [loading, setLoading] = useState(true);
 
@@ -42,8 +44,15 @@ function Records() {
 
     fetchData();
 
-    return () => setRecords([]);
   }, [token, setRecords, startDate, endDate]);
+
+  useEffect(() => {
+    return () => {
+      setRecords([]);
+      setStartDate("");
+      setEndDate("");
+    }
+  }, [setEndDate, setRecords, setStartDate]);
 
   return (
     <PageContainer>

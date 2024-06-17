@@ -1,3 +1,4 @@
+import { Prescription } from "./prescription.model";
 import { UserFromAPI } from "./user.model";
 
 export interface Appointment {
@@ -5,6 +6,7 @@ export interface Appointment {
   user: UserFromAPI;
   reason: string;
   status: string;
+  appointmentPrescriptions: Prescription[];
   appointmentRequestDateTime: string;
   appointmentEstimatedEndDateTime: string;
   appointmentRealizationDateTime: string;
@@ -16,24 +18,21 @@ export interface AppointmentDetails {
   idSpecialty: string;
 }
 
-
 export interface AppointmentOwn {
   idAppointment: string;
   idUser: string;
   status: string;
-  appointmentPrescriptions: PrescriptionOwn[];
+  appointmentPrescriptions: Prescription[];
   reason: string;
   appointmentRealizationDateTime: string;
   appointmentRequestDateTime: string;
   appointmentEndDateTime: string;
 }
 
-export interface PrescriptionOwn {
-  idPrescription: string;
-  dose: string;
-  medicine: string;
-  prescriptionEndLocalDateTime: string;
+export interface AppointmentSchedule {
   appointment: Appointment;
+  doctors: string[];
+  record: string[];
 }
 
 export enum AppointmentStatus {

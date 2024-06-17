@@ -16,11 +16,11 @@ export function OwnAppointmentsTableToolbar<TData>({
   const status = useOwnAppointments((state) => state.statusFilter);
   const setStatusFilter = useOwnAppointments((state) => state.setStatusFilter);
 
-  const isFiltered = table.getState().columnFilters.length > 0 || status;
+  const isFiltered = table.getState().columnFilters.length > 0 || status !== "todos";
 
   const handleResetFilters = () => {
     table.resetColumnFilters();
-    setStatusFilter("");
+    setStatusFilter("todos");
   };
 
   return (

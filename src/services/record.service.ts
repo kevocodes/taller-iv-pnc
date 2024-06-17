@@ -77,3 +77,33 @@ export const getRecords = async (
 
   return data;
 };
+
+export const getRecordsByPatient = async (
+  patientId: string,
+  token: string,
+): Promise<Record[]> => {
+  const response = await fetch(
+    `${BASE_URL}/users/record/${patientId}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new ResponseError("Usuario no encontrado", response.status);
+    }
+
+    throw new ResponseError(
+      "Error al obtener el historial médico del paciente",
+      response.status
+    );
+  }
+
+  const { data } = await response.json();
+
+  return data;
+}

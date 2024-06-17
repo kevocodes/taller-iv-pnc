@@ -10,10 +10,11 @@ import { Select } from "@radix-ui/react-select";
 
 function StatusFilter() {
   const setStatus = useOwnAppointments((state) => state.setStatusFilter);
+  const status = useOwnAppointments((state) => state.statusFilter);
 
   return (
-    <Select onValueChange={setStatus}>
-      <SelectTrigger className="w-full sm:w-[180px]">
+    <Select defaultValue={status} onValueChange={setStatus} value={status}>
+      <SelectTrigger className="w-full sm:w-[180px] bg-background">
         <SelectValue placeholder="Estado..." />
       </SelectTrigger>
       <SelectContent>

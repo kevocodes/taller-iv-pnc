@@ -20,7 +20,7 @@ import Users from "@/pages/Users/Users";
 import { validateSession } from "./services/auth.service";
 import { createAppUserFromResponseUser } from "./utils/createAppUserFromResponseUser";
 import UserChangeRole from "@/pages/UserChangeRole/UserChangeRole";
-import CreateRecord from "@/pages/CreateRecord/CreateRecord";
+import Record from "@/pages/CreateRecord/CreateRecord";
 import Records from "@/pages/Records/Records";
 import RequestAppointment from "@/pages/RequestAppointment/RequestAppointment";
 import Appointments from "@/pages/Appointments/Appointments";
@@ -129,7 +129,7 @@ function App() {
             >
               <Route
                 path={PRIVATE_ROUTES.ADD_RECORD}
-                element={<CreateRecord />}
+                element={<Record />}
               />
             </Route>
           </Route>

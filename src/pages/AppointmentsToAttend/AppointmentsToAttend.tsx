@@ -1,25 +1,26 @@
 import { PageContainer } from "@/components/platform/PageContainer/PageContainer";
 import { useTitle } from "@/hooks/useTitle";
 import { ResponseError } from "@/models/ResponseError.model";
-import {
-  getValidAppointments,
-} from "@/services/appointment.service";
 import { useAuth } from "@/stores/auth.store";
-import { usePrescriptAppointments } from "@/stores/prescriptAppointments.store";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import AppointmentsTable from "./AppointmentsTable/AppointmentsTable";
 import { prescriptAppointmentColumns } from "./AppointmentsTable/constants/columns";
+import { useScheduleAppointments } from "@/stores/scheduleAppointments.store";
+import { getSchedule } from "@/services/clinic.service";
+import dayjs from "dayjs";
 
 function AppointmentsToAttend() {
   useTitle("Atender citas");
 
   const token = useAuth((state) => state.token);
 
-  const appointments = usePrescriptAppointments((state) => state.appointments);
-  const setAppointments = usePrescriptAppointments(
+  const date = useScheduleAppointments((state) => state.date);
+  const appointments = useScheduleAppointments((state) => state.appointments);
+  const setAppointments = useScheduleAppointments(
     (state) => state.setAppointments
   );
+  const setDay = useScheduleAppointments((state) => state.setDate);
 
   const [loading, setLoading] = useState(true);
 
@@ -27,7 +28,10 @@ function AppointmentsToAttend() {
     async function fetchData() {
       try {
         setLoading(true);
-        const results = await getValidAppointments(token!);
+        const results = await getSchedule(
+          token!,
+          dayjs(date).format("YYYY-MM-DD")
+        );
         setAppointments(results);
       } catch (error) {
         if (error instanceof ResponseError) {
@@ -43,9 +47,15 @@ function AppointmentsToAttend() {
     }
 
     fetchData();
+  }, [token, date, setAppointments]);
 
-    return () => setAppointments([]);
-  }, [token, setAppointments]);
+  useEffect(() => {
+    return () => {
+      setDay(dayjs().toISOString());
+      setAppointments([]);
+    };
+  }, [setAppointments, setDay]);
+
   return (
     <PageContainer>
       <div className="flex flex-col sm:flex-row justify-between items-start w-full gap-3 mb-4">

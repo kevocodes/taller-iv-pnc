@@ -16,27 +16,38 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { Plus } from "lucide-react";
-import { useState } from "react";
 import RecordAddForm from "./components/RecordAddForm";
 import { UserFromAPI } from "@/models/user.model";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
 interface RecordAddProps {
   user: UserFromAPI;
+  isDialogOpen: boolean;
+  setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowDropdown: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function RecordAdd({ user }: RecordAddProps) {
-  const [open, setOpen] = useState(false);
+function RecordAdd({
+  user,
+  isDialogOpen,
+  setDialogOpen,
+  setShowDropdown,
+}: RecordAddProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   if (isDesktop) {
     return (
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button className="w-full sm:w-fit">
-            <Plus size={24} className="mr-2" />
+      <Dialog
+        open={isDialogOpen}
+        onOpenChange={(change) => {
+          setDialogOpen(change);
+          setShowDropdown(change);
+        }}
+      >
+        <DialogTrigger asChild onSelect={(e) => e.preventDefault()}>
+          <DropdownMenuItem className="cursor-pointer">
             <p>Agregar entrada</p>
-          </Button>
+          </DropdownMenuItem>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -45,19 +56,28 @@ function RecordAdd({ user }: RecordAddProps) {
               Make changes to your profile here. Click save when you're done.
             </DialogDescription> */}
           </DialogHeader>
-          <RecordAddForm setOpen={setOpen} user={user}/>
+          <RecordAddForm
+            setOpen={setDialogOpen}
+            setShowDropdown={setShowDropdown}
+            user={user}
+          />
         </DialogContent>
       </Dialog>
     );
   }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        <Button className="w-full sm:w-fit">
-          <Plus size={24} className="mr-2" />
+    <Drawer
+      open={isDialogOpen}
+      onOpenChange={(change) => {
+        setDialogOpen(change);
+        setShowDropdown(change);
+      }}
+    >
+      <DrawerTrigger asChild onSelect={(e) => e.preventDefault()}>
+        <DropdownMenuItem className="cursor-pointer">
           <p>Agregar entrada</p>
-        </Button>
+        </DropdownMenuItem>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
@@ -66,7 +86,12 @@ function RecordAdd({ user }: RecordAddProps) {
             Make changes to your profile here. Click save when you're done.
           </DrawerDescription> */}
         </DrawerHeader>
-        <RecordAddForm setOpen={setOpen} className="px-4" user={user}/>
+        <RecordAddForm
+          setOpen={setDialogOpen}
+          setShowDropdown={setShowDropdown}
+          className="px-4"
+          user={user}
+        />
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancelar</Button>

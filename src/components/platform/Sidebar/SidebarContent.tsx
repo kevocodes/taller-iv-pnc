@@ -42,7 +42,7 @@ export const SidebarContent = ({ isMobile }: SidebarContentProps) => {
       </SidebarItem>
 
       <SidebarItem
-        label="Entrada en historial"
+        label="Historial de pacientes"
         to={PRIVATE_ROUTES.ADD_RECORD}
         isSidebarOpen={isSidebarOpen}
         allowedRoles={[RoleEnum.ASSISTANT, RoleEnum.DOCTOR]}

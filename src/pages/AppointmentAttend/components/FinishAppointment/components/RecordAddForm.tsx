@@ -12,6 +12,7 @@ import { ResponseError } from "@/models/ResponseError.model";
 import { UserFromAPI } from "@/models/user.model";
 import { createRecordSchema } from "@/schemas/record.schema";
 import { createRecord } from "@/services/record.service";
+import { useAppointment } from "@/stores/appointment.store";
 import { useAuth } from "@/stores/auth.store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
@@ -26,6 +27,9 @@ interface RecordAddFormProps {
 }
 
 function RecordAddForm({ setOpen, className, user }: RecordAddFormProps) {
+  const addPatientRecord = useAppointment(
+    (state) => state.addUserMedicalRecord
+  );
   const token = useAuth((state) => state.token);
 
   const form = useForm<z.infer<typeof createRecordSchema>>({
@@ -40,6 +44,12 @@ function RecordAddForm({ setOpen, className, user }: RecordAddFormProps) {
       const message = await createRecord(token!, user.username, data.reason);
       setOpen(false);
       toast.success(message);
+      addPatientRecord({
+        idRecord: crypto.randomUUID(),
+        reason: data.reason,
+        recordDateTime: new Date().toISOString(),
+        patient: user,
+      });
     } catch (error) {
       if (error instanceof ResponseError) {
         return toast.error(error.message);

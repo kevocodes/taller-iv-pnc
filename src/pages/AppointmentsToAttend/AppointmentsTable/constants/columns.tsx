@@ -1,40 +1,42 @@
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { Appointment } from "@/models/appointment.model";
-import { Link } from "react-router-dom";
-import { PRIVATE_ROUTES } from "@/constants/routes";
-import { Button } from "@/components/ui/button";
+import {
+  AppointmentSchedule,
+} from "@/models/appointment.model";
+import AppointmentsActions from "../components/AppointmentsActions/AppointmentsActions";
 
-export const prescriptAppointmentColumns: Array<ColumnDef<Appointment>> = [
+export const prescriptAppointmentColumns: Array<
+  ColumnDef<AppointmentSchedule>
+> = [
   {
     header: "Usuario",
     id: "user",
     cell: ({ row }) => {
-      const appointment = row.original;
-      const user = appointment.user;
+      const schedule = row.original;
+      const user = schedule.appointment.user;
 
       return <p>{user.username}</p>;
     },
     filterFn: (row, _, filterValue) => {
-      const value = row.original.user.username.toLowerCase();
+      const value = row.original.appointment.user.username.toLowerCase();
 
       return value.includes(filterValue);
     },
   },
   {
     header: "Razón",
-    accessorKey: "reason",
+    accessorKey: "appointment.reason",
   },
   {
     header: "Estado",
-    accessorKey: "status",
+    accessorKey: "appointment.status",
   },
   {
     header: "Fecha de solicitud",
     accessorKey: "appointmentRequestDateTime",
     cell: ({ row }) => {
-      const appointment = row.original;
-      const dateTime = appointment.appointmentRequestDateTime;
+      const schedule = row.original;
+      const dateTime = schedule.appointment.appointmentRequestDateTime;
 
       return (
         <p>{dateTime ? dayjs(dateTime).format("DD/MM/YYYY HH:mm") : "-"}</p>
@@ -45,8 +47,8 @@ export const prescriptAppointmentColumns: Array<ColumnDef<Appointment>> = [
     header: "Fecha de realización",
     accessorKey: "appointmentRealizationDateTime",
     cell: ({ row }) => {
-      const appointment = row.original;
-      const dateTime = appointment.appointmentRealizationDateTime;
+      const schedule = row.original;
+      const dateTime = schedule.appointment.appointmentRealizationDateTime;
 
       return (
         <p>{dateTime ? dayjs(dateTime).format("DD/MM/YYYY HH:mm") : "-"}</p>
@@ -57,8 +59,8 @@ export const prescriptAppointmentColumns: Array<ColumnDef<Appointment>> = [
     header: "Fecha de finalización",
     accessorKey: "appointmentEndDateTime",
     cell: ({ row }) => {
-      const appointment = row.original;
-      const dateTime = appointment.appointmentEndDateTime;
+      const schedule = row.original;
+      const dateTime = schedule.appointment.appointmentEndDateTime;
 
       return (
         <p>{dateTime ? dayjs(dateTime).format("DD/MM/YYYY HH:mm") : "-"}</p>
@@ -68,16 +70,15 @@ export const prescriptAppointmentColumns: Array<ColumnDef<Appointment>> = [
   {
     id: "control",
     cell: ({ row }) => {
-      const appointment = row.original;
+      const schedule = row.original;
+      const appointment = schedule.appointment;
 
       return (
-        <div className="flex gap-2 justify-center items-center">
-          <Link to={`${PRIVATE_ROUTES.ATTEND_APPOINTMENT}/${appointment.idAppointment}`}>
-            <Button>
-              Atender
-            </Button>
-          </Link>
-        </div>
+        <AppointmentsActions
+          appointment={appointment}
+          doctors={schedule.doctors}
+          records={schedule.record}
+        />
       );
     },
   },

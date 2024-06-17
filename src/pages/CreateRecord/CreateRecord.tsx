@@ -9,8 +9,8 @@ import UsersTable from "./components/UsersTable/UsersTable";
 import { patientColumns } from "./components/UsersTable/constants/columns";
 import { useTitle } from "@/hooks/useTitle";
 
-function CreateRecord() {
-  useTitle("Crear entrada al historial de pacientes");
+function Record() {
+  useTitle("Historial de pacientes");
   
   const user = useAuth((state) => state.user);
   const token = useAuth((state) => state.token);
@@ -47,7 +47,7 @@ function CreateRecord() {
   return (
     <PageContainer>
       <div className="flex flex-col sm:flex-row justify-between items-start w-full gap-3 mb-4">
-        <h2 className="text-xl font-bold">Crear entrada al historial de pacientes</h2>
+        <h2 className="text-xl font-bold">Historial de pacientes</h2>
       </div>
 
       <UsersTable
@@ -59,4 +59,4 @@ function CreateRecord() {
   );
 }
 
-export default CreateRecord;
+export default Record;

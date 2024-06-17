@@ -4,7 +4,11 @@ import {
   approveAppointmentSchema,
   createAppointmentSchema,
 } from "@/schemas/appointment.schema";
-import { Appointment, AppointmentDetails, AppointmentOwn } from "@/models/appointment.model";
+import {
+  Appointment,
+  AppointmentDetails,
+  AppointmentOwn,
+} from "@/models/appointment.model";
 import dayjs from "dayjs";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
@@ -82,11 +86,59 @@ export const rejectAppointment = async (
   if (!response.ok) {
     if (response.status === 404)
       throw new ResponseError("Cita no encontrada", response.status);
-    
+
     throw new ResponseError("Error al rechazar la cita", response.status);
   }
 
   return "Cita rechazada correctamente";
+};
+
+export const cancelAppointment = async (
+  appointmentId: string,
+  token: string
+): Promise<string> => {
+  const response = await fetch(
+    `${BASE_URL}/appointment/cancel/${appointmentId}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    if (response.status === 404)
+      throw new ResponseError("Cita no encontrada", response.status);
+
+    throw new ResponseError("Error al cancelar la cita", response.status);
+  }
+
+  return "Cita cancelada correctamente";
+};
+
+export const executeAppointment = async (
+  appointmentId: string,
+  token: string
+): Promise<string> => {
+  const response = await fetch(
+    `${BASE_URL}/appointment/execute/${appointmentId}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    if (response.status === 404)
+      throw new ResponseError("Cita no encontrada", response.status);
+
+    throw new ResponseError("Error al ejecutar la cita", response.status);
+  }
+
+  return "Cita ejecutada correctamente";
 };
 
 export const getPendingAppointments = async (
@@ -101,27 +153,6 @@ export const getPendingAppointments = async (
   if (!response.ok) {
     throw new ResponseError(
       "Error al obtener las citas pendientes",
-      response.status
-    );
-  }
-
-  const { data } = await response.json();
-
-  return data;
-};
-
-export const getValidAppointments = async (
-  token: string
-): Promise<Appointment[]> => {
-  const response = await fetch(`${BASE_URL}/appointment/all-to-prescript`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new ResponseError(
-      "Error al obtener las citas",
       response.status
     );
   }
@@ -163,12 +194,15 @@ export const getOwnAppointments = async (
     query.append("status", status);
   }
 
-  const response = await fetch(`${BASE_URL}/appointment/own?${query.toString()}`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await fetch(
+    `${BASE_URL}/appointment/own?${query.toString()}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
   if (!response.ok) {
     throw new ResponseError(
@@ -180,4 +214,41 @@ export const getOwnAppointments = async (
   const { data } = await response.json();
 
   return data;
+};
+
+export const finishAppointment = async (
+  idAppointment: string,
+  token: string
+) => {
+  const response = await fetch(`${BASE_URL}/appointment/finish`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      idAppointment,
+    }),
+  });
+
+  if (!response.ok) {
+    if (response.status === 401)
+      throw new ResponseError(
+        "El doctor no está autorizado para finalizar la cita",
+        response.status
+      );
+
+    if (response.status === 404)
+      throw new ResponseError("Cita no encontrada", response.status);
+
+    if (response.status === 409)
+      throw new ResponseError(
+        "La cita ya ha sido finalizada",
+        response.status
+      );
+
+    throw new ResponseError("Error al finalizar la cita", response.status);
+  }
+
+  return "Cita finalizada correctamente";
 };

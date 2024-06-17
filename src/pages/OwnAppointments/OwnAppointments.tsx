@@ -52,7 +52,11 @@ function OwnAppointments() {
 
       <OwnAppointmentsTable
         loading={loading}
-        data={appointments}
+        data={appointments.sort(
+          (a, b) =>
+            new Date(b.appointmentRequestDateTime).getTime() -
+            new Date(a.appointmentRequestDateTime).getTime()
+        )}
         columns={ownAppointmentsColumns}
       />
     </PageContainer>

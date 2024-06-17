@@ -1,6 +1,6 @@
 import { UserFromAPI } from "@/models/user.model";
 import { ColumnDef } from "@tanstack/react-table";
-import RecordAdd from "../../RecordAdd/RecordAdd";
+import UserActions from "../components/UserActions/UserActions";
 
 export const patientColumns: Array<ColumnDef<UserFromAPI>> = [
   {
@@ -16,7 +16,7 @@ export const patientColumns: Array<ColumnDef<UserFromAPI>> = [
     cell: ({ row }) => {
       const user = row.original;
 
-      return <RecordAdd user={user} />;
+      return <UserActions user={user} />;
     },
   },
 ];

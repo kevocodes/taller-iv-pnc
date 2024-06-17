@@ -73,7 +73,7 @@ function LoginForm() {
               <FormLabel>Contraseña</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="email@gmail.com"
+                  placeholder="*********"
                   {...field}
                   type="password"
                 />
