@@ -10,6 +10,7 @@ import {
   LogOut,
   Pill,
   User,
+  UserCog,
 } from "lucide-react";
 import { RoleEnum } from "@/models/user.model";
 
@@ -39,6 +40,15 @@ export const SidebarContent = ({ isMobile }: SidebarContentProps) => {
         allowedRoles={[RoleEnum.ADMIN]}
       >
         <User size={24} />
+      </SidebarItem>
+
+      <SidebarItem
+        label="Doctores y Asistentes"
+        to={PRIVATE_ROUTES.MANAGE_DOCTORS_AND_ASSISTANTS}
+        isSidebarOpen={isSidebarOpen}
+        allowedRoles={[RoleEnum.ADMIN]}
+      >
+        <UserCog size={24} />
       </SidebarItem>
 
       <SidebarItem

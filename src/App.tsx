@@ -28,6 +28,8 @@ import AppointmentApprove from "@/pages/AppointmentApprove/AppointmentApprove";
 import OwnAppointments from "@/pages/OwnAppointments/OwnAppointments";
 import AppointmentsToAttend from "@/pages/AppointmentsToAttend/AppointmentsToAttend";
 import AppointmentAttend from "@/pages/AppointmentAttend/AppointmentAttend";
+import ManageDoctorsAndAssistants from "./pages/ManageDoctorsAndAssistants/ManageDoctorsAndAssistants";
+import CreateDoctorOrAssistant from "./pages/CreateDoctorOrAssitant/CreateDoctorOrAssistant";
 
 function App() {
   const user = useAuth((state) => state.user);
@@ -68,9 +70,20 @@ function App() {
                 path={PRIVATE_ROUTES.USERS_MANAGEMENT}
                 element={<Users />}
               />
+
               <Route
                 path={`${PRIVATE_ROUTES.USERS_CHANGE_ROLE}/:userId`}
                 element={<UserChangeRole />}
+              />
+
+              <Route
+                path={PRIVATE_ROUTES.MANAGE_DOCTORS_AND_ASSISTANTS}
+                element={<ManageDoctorsAndAssistants />}
+              />
+
+              <Route
+                path={PRIVATE_ROUTES.CREATE_DOCTOR_OR_ASSISTANT}
+                element={<CreateDoctorOrAssistant />}
               />
             </Route>
 
@@ -127,10 +140,7 @@ function App() {
                 />
               }
             >
-              <Route
-                path={PRIVATE_ROUTES.ADD_RECORD}
-                element={<Record />}
-              />
+              <Route path={PRIVATE_ROUTES.ADD_RECORD} element={<Record />} />
             </Route>
           </Route>
 

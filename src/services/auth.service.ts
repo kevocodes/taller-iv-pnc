@@ -23,7 +23,6 @@ export const signIn = async (
       throw new ResponseError("Credenciales incorrectas", response.status);
     }
 
-    console.log(response.status);
     throw new ResponseError("Error al iniciar sesión", response.status);
   }
 
@@ -32,8 +31,9 @@ export const signIn = async (
   return data;
 };
 
-
-export const signUp = async (registerData: z.infer<typeof createUserSchema> ) => {
+export const signUp = async (
+  registerData: z.infer<typeof createUserSchema>
+) => {
   const response = await fetch(`${BASE_URL}/auth/register`, {
     method: "POST",
     headers: {
@@ -51,11 +51,9 @@ export const signUp = async (registerData: z.infer<typeof createUserSchema> ) =>
   }
 
   return "Usuario creado exitosamente";
-}
+};
 
-export const validateSession = async (
-  token: string
-): Promise<UserFromAPI> => {
+export const validateSession = async (token: string): Promise<UserFromAPI> => {
   const response = await fetch(`${BASE_URL}/users/whoami`, {
     method: "GET",
     headers: {

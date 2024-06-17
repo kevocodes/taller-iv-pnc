@@ -54,6 +54,24 @@ export const getDoctors = async (token: string): Promise<UserFromAPI[]> => {
   return data;
 };
 
+export const getDoctorsAndAssistants = async (token: string): Promise<UserFromAPI[]> => {
+  const response = await fetch(`${BASE_URL}/users/doctors-and-assistants`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new ResponseError("Error al obtener los doctores y asistentes", response.status);
+  }
+
+  const { data } = await response.json();
+
+  return data;
+};
+
+
 export const getUserById = async (
   userId: string,
   token: string
@@ -95,4 +113,22 @@ export const updateUserRole = async (
   }
 
   return "Roles actualizados correctamente";
+};
+
+export const deleteUser = async (userId: string, token: string): Promise<string> => {
+  const response = await fetch(`${BASE_URL}/users/${userId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    if (response.status === 404)
+      throw new ResponseError("Usuario no encontrado", response.status);
+
+    throw new ResponseError("Error al eliminar el usuario", response.status);
+  }
+
+  return "Usuario eliminado correctamente";
 };
