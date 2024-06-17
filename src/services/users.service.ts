@@ -1,5 +1,7 @@
+import { z } from "zod";
 import { ResponseError } from "../models/ResponseError.model";
 import { UserFromAPI } from "@/models/user.model";
+import { createDoctorOrAssistantSchema } from "@/schemas/createDoctorOrAssistant.schema";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -54,7 +56,9 @@ export const getDoctors = async (token: string): Promise<UserFromAPI[]> => {
   return data;
 };
 
-export const getDoctorsAndAssistants = async (token: string): Promise<UserFromAPI[]> => {
+export const getDoctorsAndAssistants = async (
+  token: string
+): Promise<UserFromAPI[]> => {
   const response = await fetch(`${BASE_URL}/users/doctors-and-assistants`, {
     method: "GET",
     headers: {
@@ -63,14 +67,16 @@ export const getDoctorsAndAssistants = async (token: string): Promise<UserFromAP
   });
 
   if (!response.ok) {
-    throw new ResponseError("Error al obtener los doctores y asistentes", response.status);
+    throw new ResponseError(
+      "Error al obtener los doctores y asistentes",
+      response.status
+    );
   }
 
   const { data } = await response.json();
 
   return data;
 };
-
 
 export const getUserById = async (
   userId: string,
@@ -115,7 +121,10 @@ export const updateUserRole = async (
   return "Roles actualizados correctamente";
 };
 
-export const deleteUser = async (userId: string, token: string): Promise<string> => {
+export const deleteUser = async (
+  userId: string,
+  token: string
+): Promise<string> => {
   const response = await fetch(`${BASE_URL}/users/${userId}`, {
     method: "DELETE",
     headers: {
@@ -131,4 +140,28 @@ export const deleteUser = async (userId: string, token: string): Promise<string>
   }
 
   return "Usuario eliminado correctamente";
+};
+
+export const createDoctorOrAssistant = async (
+  registerData: z.infer<typeof createDoctorOrAssistantSchema>,
+  token: string
+): Promise<string> => {
+  const response = await fetch(`${BASE_URL}/users/create-doctor-or-assistant`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(registerData),
+  });
+
+  if (!response.ok) {
+    if (response.status === 409) {
+      throw new ResponseError("Usuario ya existe", response.status);
+    }
+
+    throw new ResponseError("Error al crear doctor o asistente", response.status);
+  }
+
+  return "Usuario creado exitosamente";
 };

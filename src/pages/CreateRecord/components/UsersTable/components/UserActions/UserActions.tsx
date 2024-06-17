@@ -8,16 +8,19 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import { Dialog } from "@/components/ui/dialog";
 import { useState } from "react";
-import { UserFromAPI } from "@/models/user.model";
+import { RoleEnum, UserFromAPI } from "@/models/user.model";
 import OwnAppointmentsPrescriptionsButton from "./components/OwnAppointmentsPrescriptions/OwnAppointmentsPrescriptionsButton";
 import OwnAppointmentsPrescriptionsContent from "./components/OwnAppointmentsPrescriptions/OwnAppointmentsPrescriptionsContent";
 import RecordAdd from "./components/RecordAdd/RecordAdd";
+import { useAuth } from "@/stores/auth.store";
 
 interface UserActionsProps {
   user: UserFromAPI;
 }
 
 function UserActions({ user }: UserActionsProps) {
+  const userAuthenticaded = useAuth((state) => state.user);
+
   const [showDropdown, setShowDropdown] = useState(false);
   const [isAddRecordDialogOpen, setIsAddRecordDialogOpen] = useState(false);
 
@@ -43,10 +46,13 @@ function UserActions({ user }: UserActionsProps) {
           setShowDropdown={setShowDropdown}
         />
 
-        <Dialog onOpenChange={(change) => setShowDropdown(change)}>
-          <OwnAppointmentsPrescriptionsButton />
-          <OwnAppointmentsPrescriptionsContent user={user} />
-        </Dialog>
+        {userAuthenticaded!.roles.filter((r) => r.name === RoleEnum.DOCTOR)
+          .length > 0 && (
+          <Dialog onOpenChange={(change) => setShowDropdown(change)}>
+            <OwnAppointmentsPrescriptionsButton />
+            <OwnAppointmentsPrescriptionsContent user={user} />
+          </Dialog>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

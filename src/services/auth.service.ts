@@ -47,7 +47,7 @@ export const signUp = async (
       throw new ResponseError("Usuario ya existe", response.status);
     }
 
-    throw new ResponseError("Error al iniciar sesión", response.status);
+    throw new ResponseError("Error al crear cuenta", response.status);
   }
 
   return "Usuario creado exitosamente";

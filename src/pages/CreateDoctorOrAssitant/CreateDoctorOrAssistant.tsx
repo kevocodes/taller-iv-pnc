@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { PRIVATE_ROUTES } from "@/constants/routes";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import CreateDoctorOrAssistantForm from "./components/CreateDoctorOrAssistantForm/CreateDoctorOrAssistantForm";
 
 function CreateDoctorOrAssistant() {
   return (
@@ -15,6 +16,8 @@ function CreateDoctorOrAssistant() {
         </Link>
         <h2 className="text-xl font-bold">Crear usuario o asistente</h2>
       </div>
+
+      <CreateDoctorOrAssistantForm />
     </PageContainer>
   );
 }

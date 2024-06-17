@@ -12,42 +12,56 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import PasswordCheckList from "./components/PasswordCheckList";
-import { createUserSchema } from "@/schemas/register.schema";
 import { LoaderCircle } from "lucide-react";
 import { ResponseError } from "@/models/ResponseError.model";
 import { toast } from "sonner";
-import { signUp } from "@/services/auth.service";
 import { useNavigate } from "react-router-dom";
-import { PUBLIC_ROUTES } from "@/constants/routes";
+import { PRIVATE_ROUTES } from "@/constants/routes";
+import { createDoctorOrAssistantSchema } from "@/schemas/createDoctorOrAssistant.schema";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { createDoctorOrAssistant } from "@/services/users.service";
+import { useAuth } from "@/stores/auth.store";
 
-function RegisterForm() {
+function CreateDoctorOrAssistantForm() {
   const navigate = useNavigate();
 
-  const form = useForm<z.infer<typeof createUserSchema>>({
-    resolver: zodResolver(createUserSchema),
+  const token = useAuth((state) => state.token);
+
+  const form = useForm<z.infer<typeof createDoctorOrAssistantSchema>>({
+    resolver: zodResolver(createDoctorOrAssistantSchema),
     defaultValues: {
       username: "",
       email: "",
       password: "",
+      role: "DCTR",
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof createUserSchema>) => {
+  const onSubmit = async (
+    values: z.infer<typeof createDoctorOrAssistantSchema>
+  ) => {
     try {
-      const message = await signUp(values);
+      const message = await createDoctorOrAssistant(values, token!);
       toast.success(message);
-      navigate(PUBLIC_ROUTES.LOGIN);
+      navigate(PRIVATE_ROUTES.MANAGE_DOCTORS_AND_ASSISTANTS);
     } catch (error) {
       if (error instanceof ResponseError) return toast.error(error.message);
 
-      if (error instanceof Error) return toast.error("Error al crear cuenta");
+      if (error instanceof Error)
+        return toast.error("Error crear el doctor o asistente");
     }
   };
 
   return (
     <Form {...form}>
       <form
-        className="w-full bg-background rounded-lg flex flex-col gap-8 justify-center items-center"
+        className="w-full bg-background rounded-md max-w-3xl flex flex-col gap-8 justify-center items-center p-4"
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField
@@ -92,6 +106,28 @@ function RegisterForm() {
           )}
         />
 
+        <FormField
+          control={form.control}
+          name="role"
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormLabel>Rol</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecciona un rol" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="DCTR">Doctor</SelectItem>
+                  <SelectItem value="ASST">Asistente</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <Button
           className="w-full"
           type="submit"
@@ -107,4 +143,4 @@ function RegisterForm() {
   );
 }
 
-export default RegisterForm;
+export default CreateDoctorOrAssistantForm;
