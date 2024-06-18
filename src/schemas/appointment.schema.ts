@@ -13,15 +13,16 @@ export const createAppointmentSchema = z.object({
 });
 
 export const approveAppointmentSchema = z.object({
-  duration: z.string().min(1, {message: "Duración en minutos requerida"}).refine((value) => Number(value) > 0, {
-    message: "La duración en minutos debe ser mayor a 0",
-  }),
+  duration: z
+    .string()
+    .min(1, { message: "Duración en minutos requerida" })
+    .refine((value) => Number(value) > 0, {
+      message: "La duración en minutos debe ser mayor a 0",
+    }),
   realizationDateTime: z
     .date({ message: "La hora es requerida" })
-    .refine(
-      (date) => {
-        return date > new Date();
-      },
-      { message: "La fecha y hora deben ser en el futuro" }
-    ),
-})
+    .nullable()
+    .refine((date) => date === null || date > new Date(), {
+      message: "La fecha y hora deben ser en el futuro",
+    }),
+});

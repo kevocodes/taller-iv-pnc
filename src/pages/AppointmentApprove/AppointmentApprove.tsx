@@ -4,28 +4,36 @@ import { PRIVATE_ROUTES } from "@/constants/routes";
 import { useTitle } from "@/hooks/useTitle";
 import { ResponseError } from "@/models/ResponseError.model";
 import { getAppointmentById } from "@/services/appointment.service";
-import { useAppointment } from "@/stores/appointment.store";
+import {
+  DEFAULT_APPROVE_INFORMATION,
+  useAppointment,
+} from "@/stores/appointment.store";
 import { useAuth } from "@/stores/auth.store";
 import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import AppointmentApproveForm from "./components/AppointmentApproveForm/AppointmentApproveForm";
-import { getDoctors } from "@/services/users.service";
 import { getSpecialties } from "@/services/specialties.service";
+import AppointmentDetailsStep from "./components/AppointmentDetailsStep/AppointmentDetailsStep";
 
 function AppointmentApprove() {
   useTitle("Aprobar cita");
-  
+
   const { appointmentId } = useParams();
 
   const [loading, setLoading] = useState(true);
 
   const token = useAuth((state) => state.token);
-  
+
   const setAppointment = useAppointment((state) => state.setAppointment);
-  const setDoctors = useAppointment((state) => state.setDoctors);
   const setSpecialties = useAppointment((state) => state.setSpecialties);
+  const setDoctors = useAppointment((state) => state.setDoctors);
+  const setApproveInformation = useAppointment(
+    (state) => state.setApproveInformation
+  );
+
+  const [step, setStep] = useState(1);
 
   useEffect(() => {
     async function fetchData() {
@@ -33,9 +41,6 @@ function AppointmentApprove() {
         setLoading(true);
         const appointment = await getAppointmentById(appointmentId!, token!);
         setAppointment(appointment);
-
-        const doctors = await getDoctors(token!);
-        setDoctors(doctors);
 
         const specialties = await getSpecialties(token!);
         setSpecialties(specialties);
@@ -56,10 +61,11 @@ function AppointmentApprove() {
 
     return () => {
       setAppointment(null);
-      setDoctors([]);
       setSpecialties([]);
+      setDoctors([]);
+      setApproveInformation(DEFAULT_APPROVE_INFORMATION);
     };
-  }, [token, setAppointment, appointmentId, setDoctors, setSpecialties]);
+  }, [token, setAppointment, appointmentId, setSpecialties, setDoctors, setApproveInformation]);
 
   return (
     <PageContainer>
@@ -74,7 +80,9 @@ function AppointmentApprove() {
 
       {loading && <p>Cargando...</p>}
 
-      {!loading && <AppointmentApproveForm />}    
+      {!loading && step === 1 && <AppointmentApproveForm setStep={setStep} />}
+
+      {!loading && step === 2 && <AppointmentDetailsStep setStep={setStep} />}
     </PageContainer>
   );
 }

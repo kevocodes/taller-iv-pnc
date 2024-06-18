@@ -56,6 +56,28 @@ export const getDoctors = async (token: string): Promise<UserFromAPI[]> => {
   return data;
 };
 
+export const getAvailableDoctors = async (startDate: string, endDate: string, token: string): Promise<UserFromAPI[]> => {
+  const query = new URLSearchParams();
+
+  query.append("startDate", startDate);
+  query.append("endDate", endDate);
+
+  const response = await fetch(`${BASE_URL}/users/doctors-available?${query.toString()}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new ResponseError("Error al obtener los doctores disponibles", response.status);
+  }
+
+  const { data } = await response.json();
+
+  return data;
+};
+
 export const getDoctorsAndAssistants = async (
   token: string
 ): Promise<UserFromAPI[]> => {
