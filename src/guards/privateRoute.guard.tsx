@@ -5,7 +5,7 @@ import getDefaultRedirectByRole from "@/utils/getDefaultRedirectByRole";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 interface RequireAuthProps {
-  allowedRoles: RoleEnum[];
+  allowedRoles?: RoleEnum[];
 }
 
 function RequireAuth({ allowedRoles }: RequireAuthProps) {
@@ -18,7 +18,7 @@ function RequireAuth({ allowedRoles }: RequireAuthProps) {
     );
   }
 
-  if (!allowedRoles.some((role) => user.roles.some((r) => r.name === role))) {
+  if (allowedRoles &&!allowedRoles.some((role) => user.roles.some((r) => r.name === role))) {
     return <Navigate to={getDefaultRedirectByRole(user.roles)} replace />;
   }
 

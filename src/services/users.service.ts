@@ -39,23 +39,6 @@ export const getPatients = async (token: string): Promise<UserFromAPI[]> => {
   return data;
 };
 
-export const getDoctors = async (token: string): Promise<UserFromAPI[]> => {
-  const response = await fetch(`${BASE_URL}/users/doctors`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new ResponseError("Error al obtener los doctores", response.status);
-  }
-
-  const { data } = await response.json();
-
-  return data;
-};
-
 export const getAvailableDoctors = async (startDate: string, endDate: string, token: string): Promise<UserFromAPI[]> => {
   const query = new URLSearchParams();
 

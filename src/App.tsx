@@ -30,6 +30,7 @@ import AppointmentsToAttend from "@/pages/AppointmentsToAttend/AppointmentsToAtt
 import AppointmentAttend from "@/pages/AppointmentAttend/AppointmentAttend";
 import ManageDoctorsAndAssistants from "./pages/ManageDoctorsAndAssistants/ManageDoctorsAndAssistants";
 import CreateDoctorOrAssistant from "./pages/CreateDoctorOrAssitant/CreateDoctorOrAssistant";
+import BannedUserPage from "./pages/BannedUser/BannedUserPage";
 
 function App() {
   const user = useAuth((state) => state.user);
@@ -141,6 +142,14 @@ function App() {
               }
             >
               <Route path={PRIVATE_ROUTES.ADD_RECORD} element={<Record />} />
+            </Route>
+
+            {/* BANNED USERS */}
+            <Route element={<RequireAuth />}>
+              <Route
+                path={PRIVATE_ROUTES.BANNED_USERS}
+                element={<BannedUserPage />}
+              />
             </Route>
           </Route>
 

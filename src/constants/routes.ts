@@ -14,6 +14,7 @@ export enum PRIVATE_ROUTES {
   ATTEND_APPOINTMENT = "/atender-cita",
   MANAGE_DOCTORS_AND_ASSISTANTS = "/administrar-medicos-y-asistentes",
   CREATE_DOCTOR_OR_ASSISTANT = `${MANAGE_DOCTORS_AND_ASSISTANTS}/crear`,
+  BANNED_USERS = "/usuario-bloqueado",
 }
 
 export enum DEFAULT_REDIRECT {
