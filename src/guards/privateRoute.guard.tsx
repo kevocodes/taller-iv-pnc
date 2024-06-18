@@ -18,7 +18,14 @@ function RequireAuth({ allowedRoles }: RequireAuthProps) {
     );
   }
 
-  if (allowedRoles &&!allowedRoles.some((role) => user.roles.some((r) => r.name === role))) {
+  if (!allowedRoles && user.roles.length > 0) {
+    return <Navigate to={getDefaultRedirectByRole(user.roles)} replace />;
+  }
+
+  if (
+    allowedRoles &&
+    !allowedRoles.some((role) => user.roles.some((r) => r.name === role))
+  ) {
     return <Navigate to={getDefaultRedirectByRole(user.roles)} replace />;
   }
 

@@ -24,7 +24,13 @@ export const usersColumns: Array<ColumnDef<UserFromAPI>> = [
 
       return (
         <div className="flex flex-wrap gap-2 items-center justify-center">
-          {roles.map((role) => {
+          {roles.length === 0 && (
+            <Badge className="py-1 px-2" variant="destructive">
+              Bloqueado
+            </Badge>
+          )}
+
+          {roles.length > 0 && roles.map((role) => {
             return (
               <Badge key={role.id} className="py-1 px-2" variant="outline">
                 {translateUserRole(role.name)}
