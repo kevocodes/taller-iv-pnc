@@ -1,8 +1,9 @@
 import { cn } from "@/lib/utils";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { RoleEnum } from "@/models/user.model";
 import { useAuth } from "@/stores/auth.store";
+import { PUBLIC_ROUTES } from "@/constants/routes";
 
 const variants = {
   open: { opacity: 1, transition: { duration: 0.6 } },
@@ -64,10 +65,12 @@ export const SidebarItemLogout = ({
   children,
   isSidebarOpen,
 }: Omit<SidebarItemProps, "to">) => {
+  const navigate = useNavigate();
   const logoutUser = useAuth((state) => state.logout);
 
   const handleLogout = () => {
     logoutUser();
+    navigate(PUBLIC_ROUTES.LOGIN, { replace: true });
   };
 
   return (
